@@ -14,7 +14,7 @@ Teste 01 - 80% dos produtos mostrados devem ser exclusivamente o produto pesquis
     Quando buscar "Iphone" usando a barra de pesquisa
     E conte a lista total de produtos encontrados
     E conte o total de itens "iPhone" encontrados
-    #Então certifique-se de que pelo menos "80"% dos itens encontrados sejam "Iphone"
+    Então certifique-se de que pelo menos "80"% dos itens encontrados sejam "Iphone"
 
 # Teste 02 - O preço mais alto na primeira página não pode ser superior a US$ 2.000
     # [Documentation]         Esse teste verifica se o produto de valor maior em reais

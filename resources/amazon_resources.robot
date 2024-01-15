@@ -1,6 +1,7 @@
 *** Settings ***
 Library  SeleniumLibrary
 Library  String
+Library  Collections
 
 *** Variable ***
 ${BROWSER}                      chrome
@@ -14,7 +15,7 @@ ${INDICE}                       1
 Abra o navegador 
     Open Browser                          browser=${BROWSER}
     Maximize Browser Window 
-options=add_experimental_option("detach", True)    
+# options=add_experimental_option("detach", True)    
 
 
 Dado que estou na home do site da amazon 
@@ -38,81 +39,25 @@ E conte a lista total de produtos encontrados
     Log  Esse é o total de itens retornados após a pesquisa: ${contador}    
 
 E conte o total de itens "iPhone" encontrados
-    ${total_itens}              Get Element Count     locator=//div[@data-cy="title-recipe"]
-    ${total_itens_int}          Convert To Integer    item=${total_itens}
-    # ${total_itens}             Get Element Count     locator=//div[@data-cy="title-recipe"]
-    # @{total_itens_str}         Convert To String    @{total_itens}
-    # ${total_itens_int}         Convert To Integer   ${total_itens}
-# 
-    # ${item}                    Get WebElement       locator=//div[@data-cy="title-recipe"]
-    # ${item_str}                Convert To String    ${item}
-    #converter string nao resolveu pq a keyword espera so 1 argumento   
+    ${total_iphon}              Get Element Count     locator=//h2/a/span[contains(.,'Apple iPhone')]
+    ${total_iohon_int}          Convert To Integer    item=${total_iphon}
+    Set Suite Variable          ${total_iohon_int}     ${total_itens_int}   
+    Set Suite Variable           ${contador}           ${total_itens_int}
+
+    ${prd}      Get Element Count    locator=//h2/a/span[contains(.,'Apple iPhone')]
+    ${int}      Convert To Integer    ${prd}
+    Set Suite Variable      ${total_iphones}        ${int}
+    Log  total de iphones é: ${total_iphones}
     
-    Set Test Variable           ${i}        2
-    #@{itens_texto}          Create List         @{total_itens}
-# 
-    WHILE  ${i} <= ${total_itens_int}
-        Log To Console      este é um numero teste[${i}]
-        ${prd}      Get Text    locator=//div[@data-cy="title-recipe"]
-        @{lista}=   Create List     ${prd}
-        Log To Console      @{lista}[${i}]
-        ${i}    Evaluate  ${i} + 1
+Então certifique-se de que pelo menos "${porcentagem}"% dos itens encontrados sejam "Iphone"
+    #REGRA DE 3 PRA SABER A QUANTIDADE DE PRODUTOS EQUIVALENTE A 80% DO RETORNADO
+    ${resultado}=    Evaluate    ${contador} * (${porcentagem} / 100)
+    Log    80% de ${contador} é: ${resultado}
 
+    ${resultado_int}     Convert To Integer     ${resultado}
+
+    IF  ${resultado_int} == ${total_iphones}
+        Log  Tem pelo menos ${porcentagem}% de iphones nos produtos retornados
+    ELSE
+        Log  Tem menos de ${porcentagem}% de iphones nos produtos retornados
     END
-    # IF      ${i}   <=    ${total_itens_int}
-        # FOR  ${item_str}    IN      @{itens_texto}
-            # ${i}     Evaluate        ${i}  +  1
-            #  Log  ${i}   
-        # END
-    # END
-    # ${texto_elemento}=          Evaluate    ' '.join(${total_produtos})         
-    # Log ${texto_elemento}    
-
-
-#    ${elementos}=         Get WebElements    locator=//div[@data-cy="title-recipe"]
-#    ${lista_produtos}=    Create List
-    # FOR    ${total_itens}    IN    @{elementos}
-        # ${texto}=    Get Text    locator=//div[@data-cy="title-recipe"]
-        # Append To List    ${lista_produtos}    ${texto}
-    # END
-    # ${total_itens_int}          Convert To Integer    item=${total_itens}
-    # Log   total aqui      ${total_itens} 
-    # ${produto}     Get Text        locator=//div[@data-cy="title-recipe"]
-    # FOR  ${produto}   IN   @{total_produtos}
-        # Log     testando o loop
-        # ${produto}     Get Text        locator=//div[@data-cy="title-recipe"]
-        # Log     produto aqui    ${produto}
-    # END
-    # Conte a lista total de produtos encontrados     
-    # Log To Console  A quantidade de itens total na proxima keyword aqui ${contador}
-    # ${r1}   Evaluate   ${contador} // 100
-    # ${produto_resposta}      Get Text          locator=//div[@data-cy="title-recipe"]
-    # ${qtd_iphone}            Get Line Count    ${produto}
-    # Log To Console         ${qtd_iphone}
-
-
-    # ${elemento}     Get Length      
-    # ${elemento}
-    # FOR  1  IN  @{elementos}
-    #   ${texto}  Get Text  ${elemento}
-    #   Log  Texto encontrado: ${texto}
-    #  ${teste}  document.querySelectorAll('.a-size-mini a-spacing-none a-color-base s-line-clamp-4');
-    # END 
-        # ${teste}.forEach((teste) =>
-        #   teste.addEventListener('click', (event) => {
-        #     console.log(event.currentTarget.textContent);
-        #   })
-        # );
-    # Log To Console     ${produto_resposta}
-    # Log To Console    ${\n}
-    # FOR  ${CONTADOR}   IN RANGE  3   ${contador}
-        # Log To Console     Minha posição agora é: ${CONTADOR}  
-        # ${prd_lista}        Get Text    locator=//div[@data-cy="title-recipe"]
-        # Log To Console     Produto next: ${prd_lista}
-        # Execute JavaScript    window.scrollTo(0,1000)
-
-    # END
-
-
-
-    # Log    valor que quero  ${r1}
