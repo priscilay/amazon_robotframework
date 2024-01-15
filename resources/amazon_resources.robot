@@ -1,6 +1,5 @@
 *** Settings ***
 Library  SeleniumLibrary
-Library  Selenium2Library
 Library  String
 
 *** Variable ***
@@ -39,23 +38,33 @@ E conte a lista total de produtos encontrados
     Log  Esse é o total de itens retornados após a pesquisa: ${contador}    
 
 E conte o total de itens "iPhone" encontrados
-    @{total_itens}             Get WebElements      locator=//div[@data-cy="title-recipe"]
-    @{total_itens_str}         Convert To String    @{total_itens}
-    ${total_itens_int}         Convert To Integer   @{total_itens}
-
-    ${item}                    Get WebElement       locator=//div[@data-cy="title-recipe"]
-    ${item_str}                Convert To String    ${item}
+    ${total_itens}              Get Element Count     locator=//div[@data-cy="title-recipe"]
+    ${total_itens_int}          Convert To Integer    item=${total_itens}
+    # ${total_itens}             Get Element Count     locator=//div[@data-cy="title-recipe"]
+    # @{total_itens_str}         Convert To String    @{total_itens}
+    # ${total_itens_int}         Convert To Integer   ${total_itens}
+# 
+    # ${item}                    Get WebElement       locator=//div[@data-cy="title-recipe"]
+    # ${item_str}                Convert To String    ${item}
     #converter string nao resolveu pq a keyword espera so 1 argumento   
     
-    Set Test Variable           ${i}        1
-    @{itens_texto}          Create List         @{total_itens}
+    Set Test Variable           ${i}        2
+    #@{itens_texto}          Create List         @{total_itens}
+# 
+    WHILE  ${i} <= ${total_itens_int}
+        Log To Console      este é um numero teste[${i}]
+        ${prd}      Get Text    locator=//div[@data-cy="title-recipe"]
+        @{lista}=   Create List     ${prd}
+        Log To Console      @{lista}[${i}]
+        ${i}    Evaluate  ${i} + 1
 
-    IF      ${i}   <=    ${total_itens_int}
-        FOR  ${item_str}    IN      @{itens_texto}
-            ${i}     Evaluate        ${i}  +  1
-             Log  ${i}   
-        END
     END
+    # IF      ${i}   <=    ${total_itens_int}
+        # FOR  ${item_str}    IN      @{itens_texto}
+            # ${i}     Evaluate        ${i}  +  1
+            #  Log  ${i}   
+        # END
+    # END
     # ${texto_elemento}=          Evaluate    ' '.join(${total_produtos})         
     # Log ${texto_elemento}    
 
