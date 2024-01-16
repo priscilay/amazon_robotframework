@@ -1,0 +1,12 @@
+from robot.libraries.BuiltIn import BuiltIn 
+from dotenv import load_dotenv
+
+def carregar_variaveis_do_env():
+    load_dotenv()
+
+    token = BuiltIn().get_variable_value("${TOKEN}")
+
+    BuiltIn().log(f"token: {TOKEN}")
+
+if __name__ == "__main__":
+    carregar_variaveis_do_env()
