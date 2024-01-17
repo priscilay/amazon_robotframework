@@ -95,3 +95,13 @@ Então certifique-se de que o valor convertido não seja maior que US$ "${valor_
         Run Keyword If Test Failed     name=iphone mais caro que o valor esperado em dolar
     END
 
+E encontrar produtos que não sejam "Iphone"
+    ${product_count}=  Get Element Count    locator=//h2/a/span[not(contains(.,'Apple iPhone'))]
+    Should Be True  ${product_count} > 0
+    ${non_iphone_count}=  Get Element Count  locator=//h2/a/span[not(contains(.,'Apple iPhone'))]
+                                                                        
+    Should Be True  ${non_iphone_count} > 0
+
+    ${teste_preco}      Get Text        locator=//div/div/h2/a/span[not(contains(.,'Apple iPhone'))]/../../../div/../../div/../div/../div[@data-cy='title-recipe']
+    Log To Console      ${teste_preco}
+
