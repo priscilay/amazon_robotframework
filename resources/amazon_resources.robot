@@ -96,12 +96,21 @@ Então certifique-se de que o valor convertido não seja maior que US$ "${valor_
     END
 
 E encontrar produtos que não sejam "Iphone"
-    ${product_count}=  Get Element Count    locator=//h2/a/span[not(contains(.,'Apple iPhone'))]
-    Should Be True  ${product_count} > 0
     ${non_iphone_count}=  Get Element Count  locator=//h2/a/span[not(contains(.,'Apple iPhone'))]
                                                                         
     Should Be True  ${non_iphone_count} > 0
+    ${teste_preco}      Get Text        locator=//h2/a/span[not(contains(.,'Apple iPhone'))]/../../../../div/div/div/a/span/span/span[@class='a-price-whole']
+    ${next_element}    Execute JavaScript    
+        ...  return arguments[${non_iphone_count}].nextElementSibling;   
+        ...  ${teste_preco} 
+    Log     Next Element: ${teste_preco}
+    
+    # ${current_element}    Get Element    xpath=//your/xpath/here
+    # ${next_element}    Execute JavaScript    return arguments[${non_iphone_count}].nextElementSibling;    ${current_element}
+    # Log    Next Element: ${next_element}
 
-    ${teste_preco}      Get Text        locator=//div/div/h2/a/span[not(contains(.,'Apple iPhone'))]/../../../div/../../div/../div/../div[@data-cy='title-recipe']
-    Log To Console      ${teste_preco}
-
+Iphone mais barato
+    ${iphone_str}       Get Text        locator=//h2/a/span[not(contains(.,'Apple iPhone'))]
+    Click Element           locator=s-result-sort-select_2
+    Wait Until Element Is Visible           locator=//span[@class='a-price-whole']
+    ${valor_mais_alto}      Get Text        locator=//span[@class='a-price-whole']
